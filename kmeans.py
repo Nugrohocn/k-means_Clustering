@@ -53,7 +53,7 @@ def lakukan_kmeans_clustering(k, X, random_state):
 
         if debug:
             with expander:
-                df_debug = pd.DataFrame(X, columns=['price', 'sales', 'retail_price'])
+                df_debug = pd.DataFrame(X, columns=['price', 'sales', 'retail_prices'])
                 for i in range(k):
                     df_debug[f'Jarak ke Cluster {i+1}'] = jarak_poin[:, i]
                 df_debug['Cluster Terdekat'] = labels + 1
@@ -96,29 +96,12 @@ def plot(X, centroids, labels, random_state):
     plt.legend(title='Clusters')
     st.pyplot()
 
-# Data
-data = {
-    'title': ['Converse Chuck Taylor All-Star 70 Hi Black', 'Nike Air Monarch IV White Navy',
-              'Nike Air Force 1 Low 07 White', 'adidas originals Superstar Cloud White Core Black Gold (GS)',
-              'Nike Dunk Low Retro White Black Panda', 'Vans Old Skool Black White',
-              'Nike Dunk Low Retro White Black Panda (W)', 'Nike Dunk Low Retro White Black Panda (GS)',
-              'Nike M2K Tekno Cool White (Women\'s)', 'Nike Air Force 1 Low \'07 White (Women\'s)',
-              'Nike Air Force 1 Low Flax', 'Vans SK8 HI Skateboarding Shoes Unisex',
-              'New Balance NB 530 White Silver Navy', 'adidas originals Superstar Core Black Cloud White',
-              'adidas originals Ozweego Core Black', 'Nike Flight Legacy Red White', 'New Balance 327 Grey',
-              'Converse Chuck Taylor All-Star 70 Ox Black White', 'adidas originals Samba OG Cloud White Core Black',
-              'Jordan 1 Low Wolf Grey (Women\'s)', 'Jordan 1 Mid \'Light Smoke Grey\'',
-              'Jordan Legacy 312 Low Tech Grey Fire Red Black', 'Nike Air Force 1 Low \'07 White Black Pebbled Leather',
-              'Nike Air Max 97 Triple White Wolf Grey (2017/2023)', 'Jordan 1 Mid White Metallic Gold Obsidian',
-              'Nike Hyperdunk X Low White Pure Platinum', 'UGG Classic Ultra Mini Boot Chestnut (Women\'s)',
-              'Jordan 1 Mid Wolf Grey Aluminum (Women\'s)', 'adidas originals Yeezy Boost 350 V2 Bone',
-              'Air Jordan 11 Retro \'Bred\' (2019)', 'adidas originals Ozweego Trace Cargo'],
-    'price': [82, 81, 105, 73, 90, 73, 95, 75, 99, 105, 122, 105, 105, 112, 55, 71, 89, 74, 86, 110, 116, 123, 113, 123, 135, 96, 86, 106, 216, 287, 81],
-    'sales': [10, 4, 81, 3, 278, 4, 142, 47, 19, 19, 12, 2, 270, 1, 1, 19, 16, 0, 121, 219, 80, 19, 9, 16, 11, 4, 172, 30, 34, 112, 1],
-    'retail_price': [90, 80, 115, 80, 115, 70, 115, 90, 120, 115, 135, 75, 95, 100, 120, 90, 100, 80, 100, 100, 125, 130, 115, 175, 110, 120, 150, 115, 230, 220, 110]
-}
-
-df = pd.DataFrame(data)
+# Baca file CSV untuk data
+try:
+    df = pd.read_csv('poison.csv', delimiter=';')  # Ganti 'nama_file.csv' dengan nama file CSV Anda dan tentukan delimiter ';'
+except Exception as e:
+    st.error(f'Error: {e}')
+    st.stop()
 
 # Normalisasi Data
 normalisasi = st.radio('Metode Normalisasi', ['None', 'MinMaxScaler'])
@@ -132,7 +115,7 @@ if menu == 'K-Means Clustering':
     st.markdown('# Perhitungan K-Means Clustering')
     
     k = st.sidebar.number_input('k', min_value=1, max_value=100, value=3)
-    random_state = st.sidebar.number_input('Random State', min_value=1, max_value=10000, value=30)
+    random_state = st.sidebar.number_input('Random State', min_value=1, max_value=10000, value=10)
     
     st.write(f"Parameter yang digunakan:\n- k = {k}\n- random_state = {random_state}")
 
@@ -144,4 +127,4 @@ if menu == 'K-Means Clustering':
 # Display Data
 elif menu == 'Data':
     st.markdown('# Data yang Digunakan')
-    st.dataframe(df[['title', 'price', 'sales', 'retail_price']], width=1000, height=500)
+    st.dataframe(df[['title', 'price', 'sales', 'release_date', 'retail_price']], width=1000, height=500)
